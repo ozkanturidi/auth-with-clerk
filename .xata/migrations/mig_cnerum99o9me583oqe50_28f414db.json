@@ -1,0 +1,11 @@
+{
+  "id": "mig_cnerum99o9me583oqe50",
+  "checksum": "1:28f414dbfffa8dfd0ceeaf510824c545498c0486679383a8d914988bd1c5e253",
+  "operations": [
+    {
+      "addTable": {
+        "table": "folders"
+      }
+    }
+  ]
+}
