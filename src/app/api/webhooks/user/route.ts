@@ -37,7 +37,7 @@ async function handler(request: Request) {
   }
 
   const eventType: EventType = evt.type;
-  type EventType = "user.created" | "user.updated" | "*";
+  type EventType = "user.created" | "user.updated" | "user.deleted";
 
   type Event = {
     data: Record<string, string | number>;
@@ -56,6 +56,18 @@ async function handler(request: Request) {
       imageurl: String(attributes.image_url),
     });
     return NextResponse.json({ success: true });
+  } else if (eventType === "user.deleted") {
+    const { id } = evt.data;
+    const users = await xataClient.db.users
+      .filter({ externalId: String(id) })
+      .getMany();
+    if (users) {
+      await xataClient.db.users.delete(String(users[0].id));
+      return NextResponse.json({ success: true });
+    } else {
+      console.error(`User with externalId ${id} not found`);
+      return NextResponse.json({ success: false }, { status: 404 });
+    }
   } else {
     console.log(`Unhandled event type: ${eventType}`);
     return NextResponse.json({ success: false }, { status: 400 });
@@ -63,3 +75,4 @@ async function handler(request: Request) {
 }
 
 export const POST = handler;
+export const DELETE = handler;
