@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 const Navbar = () => {
   const { user, isLoaded } = useUser();
-  console.log(user);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
   useEffect(() => {

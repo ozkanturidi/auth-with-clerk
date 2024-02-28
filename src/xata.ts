@@ -29,8 +29,23 @@ const tables = [
         notNull: true,
         defaultValue: "frontend content",
       },
-      { name: "userId", type: "string", notNull: true, defaultValue: "null" },
+      { name: "user", type: "link", link: { table: "users" } },
     ],
+  },
+  {
+    name: "users",
+    columns: [
+      {
+        name: "firstname",
+        type: "string",
+        notNull: true,
+        defaultValue: "null",
+      },
+      { name: "lastname", type: "string", notNull: true, defaultValue: "null" },
+      { name: "externalId", type: "string", unique: true },
+      { name: "imageurl", type: "string" },
+    ],
+    revLinks: [{ column: "user", table: "posts" }],
   },
 ] as const;
 
@@ -43,9 +58,13 @@ export type FoldersRecord = Folders & XataRecord;
 export type Posts = InferredTypes["posts"];
 export type PostsRecord = Posts & XataRecord;
 
+export type Users = InferredTypes["users"];
+export type UsersRecord = Users & XataRecord;
+
 export type DatabaseSchema = {
   folders: FoldersRecord;
   posts: PostsRecord;
+  users: UsersRecord;
 };
 
 const DatabaseClient = buildClient();

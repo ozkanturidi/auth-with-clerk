@@ -15,7 +15,6 @@ const Blogs = async ({
   searchParams?: { title?: string };
 }) => {
   const data = await getPosts();
-  console.log(data);
   return (
     <Box style={{ marginTop: 20 }}>
       <Flex direction={"column"} gap={"4"} align={"center"}>
