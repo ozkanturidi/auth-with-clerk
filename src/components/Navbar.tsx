@@ -2,14 +2,16 @@
 import { UserButton, useUser } from "@clerk/nextjs";
 import { Box, Flex } from "@radix-ui/themes";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 const Navbar = () => {
-  const { user, isLoaded } = useUser();
+  const { user } = useUser();
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
+  const pathname = usePathname();
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollPos = window.pageYOffset;
+      const currentScrollPos = window.scrollY;
       setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
       setPrevScrollPos(currentScrollPos);
     };
@@ -17,6 +19,18 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos, visible]);
+
+  const Links = [
+    { name: "Blogs", href: "/blogs", visible: true },
+    {
+      name: "Create Blog",
+      href: "/blogs/create",
+      visible: user ? true : false,
+    },
+    { name: "About", href: "/about", visible: true },
+    { name: "Contact", href: "/contact", visible: true },
+    { name: "Login", href: "/login", visible: user ? false : true },
+  ];
 
   return (
     <Box
@@ -35,11 +49,20 @@ const Navbar = () => {
       <nav>
         <ul>
           <Flex align={"center"} gap="7" justify={"end"} pt={"4"} pr={"6"}>
-            <Link href="/blogs">Blogs</Link>
-            {user && isLoaded && <Link href="/blogs/create">Create Blog</Link>}
-            <Link href="/contact">Contact</Link>
-            <Link href="/about">About</Link>
-            {!user && <Link href="/login">Login</Link>}
+            {Links.filter((link) => link?.visible === true).map(
+              (link) =>
+                link && (
+                  <Link
+                    href={link.href}
+                    key={link.name}
+                    className={`${
+                      pathname === link.href ? "border-b-2 border-blue-600" : ""
+                    } hover:text-blue-600 transition-all duration-300 ease-in-out`}
+                  >
+                    {link.name}
+                  </Link>
+                )
+            )}
             <UserButton />
           </Flex>
         </ul>

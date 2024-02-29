@@ -30,6 +30,13 @@ const tables = [
         defaultValue: "frontend content",
       },
       { name: "user", type: "link", link: { table: "users" } },
+      { name: "language", type: "string" },
+      {
+        name: "image",
+        type: "file[]",
+        "file[]": { defaultPublicAccess: true },
+      },
+      { name: "likesCount", type: "int", notNull: true, defaultValue: "0" },
     ],
   },
   {

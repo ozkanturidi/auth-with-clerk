@@ -47,8 +47,7 @@ async function handler(request: Request) {
 
   if (eventType === "user.created") {
     const { id, ...attributes } = evt.data;
-    console.log(id);
-    console.log(attributes);
+
     await xataClient.db.users.create({
       externalId: String(id),
       firstname: String(attributes.first_name),

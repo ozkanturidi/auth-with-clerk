@@ -6,5 +6,5 @@ export default function Home() {
   // if (userId) {
   //   redirect("/dashboard");
   // }
-  return <h1>Next auth app</h1>;
+  return <h1>Özkanım kolay gelsin</h1>;
 }
