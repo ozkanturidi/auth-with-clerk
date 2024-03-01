@@ -3,11 +3,20 @@ import moment from "moment";
 export const formatDate = (date: any) => {
   const postDate = moment(date);
   const currentDate = moment();
-
-  if (currentDate.diff(postDate, "days") < 1) {
-    return postDate.startOf("day").fromNow();
+  const diffInSeconds = currentDate.diff(postDate, "seconds");
+  const diffInMinutes = currentDate.diff(postDate, "minutes");
+  const diffInHours = currentDate.diff(postDate, "hours");
+  const diffInDays = currentDate.diff(postDate, "days");
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} seconds ago`;
+  } else if (diffInMinutes < 60) {
+    return `${diffInMinutes} minutes ago`;
+  } else if (diffInHours < 24) {
+    return `${diffInHours} hours ago`;
+  } else if (diffInDays < 30) {
+    return `${diffInDays} days ago`;
   } else {
-    return postDate.format("MMM Do YY");
+    return postDate.format("MMM DD, YYYY");
   }
 };
 

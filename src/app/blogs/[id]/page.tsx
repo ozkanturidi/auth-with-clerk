@@ -1,9 +1,9 @@
 import { Avatar, Box, Flex, Text } from "@radix-ui/themes";
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import { formatDate, formatImageUrl, formatReadMin } from "@/lib/helper";
 
 import Image from "next/image";
 import { getSinglePost } from "@/lib/data";
+import LikeButton from "@/components/LikeButton";
 const BlogDetails = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
 
@@ -35,7 +35,7 @@ const BlogDetails = async ({ params }: { params: { id: string } }) => {
           </Flex>
           <Box className=" border-b-2 border-t-2 border-gray-100 w-full py-2 ">
             <Flex gap={"2"} align={"center"}>
-              <ThumbUpOutlinedIcon />
+              <LikeButton postId={String(post?.id)} />
               <Text>{post?.likesCount || 0}</Text>
             </Flex>
           </Box>

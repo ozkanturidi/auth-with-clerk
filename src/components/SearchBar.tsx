@@ -18,7 +18,6 @@ const SearchBar = () => {
   const pathname = usePathname();
 
   const searchHandler = useDebouncedCallback((query: string) => {
-    console.log(query);
     if (query) {
       params.set("q", query);
     } else {

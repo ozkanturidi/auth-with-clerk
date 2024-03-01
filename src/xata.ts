@@ -37,6 +37,7 @@ const tables = [
         "file[]": { defaultPublicAccess: true },
       },
       { name: "likesCount", type: "int", notNull: true, defaultValue: "0" },
+      { name: "tag", type: "string" },
     ],
   },
   {

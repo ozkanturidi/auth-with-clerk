@@ -16,6 +16,7 @@ export default async function createBlog(
   const content = formData.get("content");
   const language = formData.get("language");
   const image = formData.get("image");
+  const tag = formData.get("tag");
 
   const user = await xataClient.db.users
     .filter({ externalId: String(userId) })
@@ -26,12 +27,12 @@ export default async function createBlog(
       title: String(title),
       content: String(content),
       language: String(language),
-      user: user && String(user[0].id),
+      user: user && String(user[0]?.id),
+      tag: String(tag),
     });
-
     if (image && response) {
       await xataClient.files.upload(
-        { table: "posts", column: "image", record: response.id },
+        { table: "posts", column: "image", record: String(response?.id) },
         image
       );
     }
