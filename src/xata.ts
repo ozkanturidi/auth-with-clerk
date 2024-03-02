@@ -39,6 +39,7 @@ const tables = [
       { name: "likesCount", type: "int", notNull: true, defaultValue: "0" },
       { name: "tag", type: "string" },
     ],
+    revLinks: [{ column: "post", table: "users_saved_posts" }],
   },
   {
     name: "users",
@@ -53,7 +54,35 @@ const tables = [
       { name: "externalId", type: "string", unique: true },
       { name: "imageurl", type: "string" },
     ],
-    revLinks: [{ column: "user", table: "posts" }],
+    revLinks: [
+      { column: "user", table: "posts" },
+      { column: "user", table: "users_saved_posts" },
+      { column: "follower", table: "followers" },
+      { column: "user", table: "followers" },
+      { column: "user", table: "followings" },
+      { column: "following", table: "followings" },
+    ],
+  },
+  {
+    name: "users_saved_posts",
+    columns: [
+      { name: "user", type: "link", link: { table: "users" } },
+      { name: "post", type: "link", link: { table: "posts" } },
+    ],
+  },
+  {
+    name: "followers",
+    columns: [
+      { name: "follower", type: "link", link: { table: "users" } },
+      { name: "user", type: "link", link: { table: "users" } },
+    ],
+  },
+  {
+    name: "followings",
+    columns: [
+      { name: "user", type: "link", link: { table: "users" } },
+      { name: "following", type: "link", link: { table: "users" } },
+    ],
   },
 ] as const;
 
@@ -69,10 +98,22 @@ export type PostsRecord = Posts & XataRecord;
 export type Users = InferredTypes["users"];
 export type UsersRecord = Users & XataRecord;
 
+export type UsersSavedPosts = InferredTypes["users_saved_posts"];
+export type UsersSavedPostsRecord = UsersSavedPosts & XataRecord;
+
+export type Followers = InferredTypes["followers"];
+export type FollowersRecord = Followers & XataRecord;
+
+export type Followings = InferredTypes["followings"];
+export type FollowingsRecord = Followings & XataRecord;
+
 export type DatabaseSchema = {
   folders: FoldersRecord;
   posts: PostsRecord;
   users: UsersRecord;
+  users_saved_posts: UsersSavedPostsRecord;
+  followers: FollowersRecord;
+  followings: FollowingsRecord;
 };
 
 const DatabaseClient = buildClient();

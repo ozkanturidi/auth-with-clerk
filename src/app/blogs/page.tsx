@@ -1,29 +1,32 @@
-import {
-  formatDate,
-  formatImageUrl,
-  formatReadMin,
-  formatText,
-} from "@/lib/helper";
+import { formatDate, formatReadMin, formatText } from "@/lib/helper";
 import Link from "next/link";
-import { getPosts, getTotalRecord } from "@/lib/data";
+import {
+  getAllSavedPosts,
+  getFollowings,
+  getPosts,
+  getTotalRecord,
+} from "@/lib/data";
 import { Avatar, Box, Card, Flex, Text } from "@radix-ui/themes";
 import Image from "next/image";
 import SearchBar from "@/components/SearchBar";
 import PostBadge from "@/components/PostBadge";
 import PaginationComp from "@/components/PaginationComp";
+import BookMarkButton from "@/components/BookmarkButton";
+import FollowerButton from "@/components/FollowerButton";
+import { auth } from "@clerk/nextjs";
 const Blogs = async ({
   searchParams,
 }: {
   searchParams?: { q?: string; page?: string };
 }) => {
   const totalRecord = await getTotalRecord();
-  console.log(totalRecord);
-  console.log("searchParams", searchParams?.q);
+  const { userId } = auth();
   const data = await getPosts(
     String(searchParams?.q ?? ""),
     String(searchParams?.page ?? "")
   );
-
+  const savedPosts = await getAllSavedPosts();
+  const followings = await getFollowings();
   return (
     <Box style={{ marginTop: 20, marginBottom: 20 }}>
       <Flex direction={"column"} gap={"4"} align={"center"}>
@@ -47,8 +50,8 @@ const Blogs = async ({
                   width: 800,
                 }}
               >
-                <Link href={`/blogs/${post?.id}`}>
-                  <Flex direction={"column"} justify={"between"}>
+                <Flex direction={"column"} justify={"between"}>
+                  <Link href={`/blogs/${post?.id}`}>
                     <Flex direction={"column"} justify={"center"} gap={"3"}>
                       <Flex gap="3" align="center">
                         <Avatar
@@ -84,12 +87,26 @@ const Blogs = async ({
                         )}
                       </Flex>
                     </Flex>
-                    <Flex gap={"2"} mt={"4"}>
+                  </Link>
+                  <Flex justify={"between"} mt={"4"} align={"center"}>
+                    <Flex gap={"2"}>
                       {post?.tag && <PostBadge text={post?.tag ?? ""} />}
                       <Text>{formatReadMin(post?.content)}</Text>
                     </Flex>
+                    <Flex gap={"2"}>
+                      <BookMarkButton
+                        postId={post?.id}
+                        savedPosts={JSON.parse(JSON.stringify(savedPosts))}
+                      />
+                      {post?.user?.externalId !== userId && (
+                        <FollowerButton
+                          followings={JSON.parse(JSON.stringify(followings))}
+                          postUser={post?.user}
+                        />
+                      )}
+                    </Flex>
                   </Flex>
-                </Link>
+                </Flex>
               </Card>
             ))}
           </Flex>

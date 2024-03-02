@@ -30,6 +30,7 @@ const Navbar = () => {
     { name: "About", href: "/about", visible: true },
     { name: "Contact", href: "/contact", visible: true },
     { name: "Login", href: "/login", visible: user ? false : true },
+    { name: "Profile", href: "/profile", visible: user ? true : false },
   ];
 
   return (

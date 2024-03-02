@@ -1,9 +1,9 @@
 import { getXataClient } from "@/xata";
 import { IncomingHttpHeaders } from "http";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook, WebhookRequiredHeaders } from "svix";
-
+import Cookies from "js-cookie";
 const webhookSecret = process.env.WEBHOOK_SECRET || "";
 
 async function handler(request: Request) {
@@ -37,7 +37,11 @@ async function handler(request: Request) {
   }
 
   const eventType: EventType = evt.type;
-  type EventType = "user.created" | "user.updated" | "user.deleted";
+  type EventType =
+    | "user.created"
+    | "user.updated"
+    | "user.deleted"
+    | "session.created";
 
   type Event = {
     data: Record<string, string | number>;
@@ -66,6 +70,17 @@ async function handler(request: Request) {
     } else {
       console.error(`User with externalId ${id} not found`);
       return NextResponse.json({ success: false }, { status: 404 });
+    }
+  } else if (eventType === "session.created") {
+    const { user_id } = evt.data;
+    const users = await xataClient.db.users
+      .filter({ externalId: String(user_id) })
+      .getMany();
+    if (users) {
+      Cookies.set("userId", users[0].id);
+      const response = NextResponse.json({ success: true });
+      response.cookies.set("userId", users[0].id);
+      return response;
     }
   } else {
     console.log(`Unhandled event type: ${eventType}`);

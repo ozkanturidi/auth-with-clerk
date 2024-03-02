@@ -1,7 +1,9 @@
 import { getXataClient } from "@/xata";
+import { auth } from "@clerk/nextjs";
 import { contains } from "@xata.io/client";
 
 const xataClient = getXataClient();
+const { userId } = auth();
 
 export const getPosts = async (q: string, page: string) => {
   const posts = await xataClient.db.posts
@@ -18,7 +20,7 @@ export const getPosts = async (q: string, page: string) => {
     .getPaginated({
       pagination: { size: 10, offset: (parseInt(page) - 1) * 10 },
     });
-  console.log(posts);
+
   return posts.records;
 };
 
@@ -35,4 +37,21 @@ export const getTotalRecord = async () => {
   });
 
   return totalRecord.summaries[0].total;
+};
+
+export const getAllSavedPosts = async () => {
+  const savedPosts = await xataClient.db.users_saved_posts
+    .select(["post.id", "user.externalId"])
+    .getMany();
+
+  return savedPosts;
+};
+
+export const getFollowings = async () => {
+  const followings = await xataClient.db.followings
+    .filter({
+      "user.externalId": userId,
+    })
+    .getMany();
+  return followings;
 };

@@ -42,3 +42,65 @@ export default async function createBlog(
   revalidatePath("/blogs");
   redirect("/blogs");
 }
+
+export const createSavedPosts = async (postId: string) => {
+  const { userId } = auth();
+  const xataClient = getXataClient();
+  const user = await xataClient.db.users
+    .filter({ externalId: String(userId) })
+    .getMany();
+  try {
+    await xataClient.db.users_saved_posts.create({
+      user: user && String(user[0]?.id),
+      post: postId,
+    });
+    revalidatePath("/blogs");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteSavedPosts = async (postId: string) => {
+  const xataClient = getXataClient();
+  try {
+    await xataClient.db.users_saved_posts.delete(postId);
+    revalidatePath("/blogs");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const followUser = async (followingUser: string) => {
+  const { userId } = auth();
+  const xataClient = getXataClient();
+  const user = await xataClient.db.users
+    .filter({ externalId: String(userId) })
+    .getMany();
+
+  try {
+    await xataClient.db.followings.create({
+      user: user && String(user[0]?.id),
+      following: String(followingUser?.id),
+    });
+    revalidatePath("/blogs");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const unfollowUser = async (followingUser: string) => {
+  const { userId } = auth();
+  const xataClient = getXataClient();
+  try {
+    const followings = await xataClient.db.followings
+      .filter({
+        "user.externalId": String(userId),
+        following: String(followingUser?.id),
+      })
+      .getMany();
+    await xataClient.db.followings.delete(followings[0]?.id);
+    revalidatePath("/blogs");
+  } catch (error) {
+    console.error(error);
+  }
+};
