@@ -24,7 +24,9 @@ export default function RootLayout({
         <body className={inter.className}>
           <Theme>
             <Navbar />
-            <Container size={"4"}>{children}</Container>
+            <Container size={"4"}>
+              <main>{children}</main>
+            </Container>
           </Theme>
         </body>
       </html>

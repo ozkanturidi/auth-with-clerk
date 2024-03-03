@@ -3,7 +3,6 @@ import { auth } from "@clerk/nextjs";
 import { contains } from "@xata.io/client";
 
 const xataClient = getXataClient();
-const { userId } = auth();
 
 export const getPosts = async (q: string, page: string) => {
   const posts = await xataClient.db.posts
@@ -48,6 +47,8 @@ export const getAllSavedPosts = async () => {
 };
 
 export const getFollowings = async () => {
+  const { userId } = auth();
+
   const followings = await xataClient.db.followings
     .filter({
       "user.externalId": userId,

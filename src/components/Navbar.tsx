@@ -1,6 +1,6 @@
 "use client";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Container, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -47,27 +47,37 @@ const Navbar = () => {
         zIndex: 50,
       }}
     >
-      <nav>
+      <header>
         <ul>
-          <Flex align={"center"} gap="7" justify={"end"} pt={"4"} pr={"6"}>
-            {Links.filter((link) => link?.visible === true).map(
-              (link) =>
-                link && (
-                  <Link
-                    href={link.href}
-                    key={link.name}
-                    className={`${
-                      pathname === link.href ? "border-b-2 border-blue-600" : ""
-                    } hover:text-blue-600 transition-all duration-300 ease-in-out`}
-                  >
-                    {link.name}
-                  </Link>
-                )
-            )}
-            <UserButton />
-          </Flex>
+          <Container size={"4"}>
+            <Flex
+              height={"9"}
+              align={"center"}
+              gap="7"
+              justify={"end"}
+              grow={"1"}
+            >
+              {Links.filter((link) => link?.visible === true).map(
+                (link) =>
+                  link && (
+                    <Link
+                      href={link.href}
+                      key={link.name}
+                      className={`${
+                        pathname === link.href
+                          ? "border-b-2 border-blue-600"
+                          : ""
+                      } hover:text-blue-600 transition-all duration-300 ease-in-out`}
+                    >
+                      {link.name}
+                    </Link>
+                  )
+              )}
+              <UserButton />
+            </Flex>
+          </Container>
         </ul>
-      </nav>
+      </header>
     </Box>
   );
 };
