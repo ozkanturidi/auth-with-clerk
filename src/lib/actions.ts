@@ -69,7 +69,7 @@ export const deleteSavedPosts = async (postId: string) => {
   }
 };
 
-export const followUser = async (followingUser: string) => {
+export const followUser = async (followingUser: any) => {
   const { userId } = auth();
   const xataClient = getXataClient();
   const user = await xataClient.db.users
@@ -87,7 +87,7 @@ export const followUser = async (followingUser: string) => {
   }
 };
 
-export const unfollowUser = async (followingUser: string) => {
+export const unfollowUser = async (followingUser: any) => {
   const { userId } = auth();
   const xataClient = getXataClient();
   try {
