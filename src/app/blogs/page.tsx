@@ -14,6 +14,7 @@ import PaginationComp from "@/components/PaginationComp";
 import BookMarkButton from "@/components/BookmarkButton";
 import FollowerButton from "@/components/FollowerButton";
 import { auth } from "@clerk/nextjs";
+
 const Blogs = async ({
   searchParams,
 }: {
@@ -26,6 +27,7 @@ const Blogs = async ({
     String(searchParams?.page ?? "")
   );
   const savedPosts = await getAllSavedPosts();
+
   const followings = await getFollowings();
   return (
     <Box style={{ marginTop: 20, marginBottom: 20 }}>
@@ -101,7 +103,7 @@ const Blogs = async ({
                       {post?.user?.externalId !== userId && (
                         <FollowerButton
                           followings={JSON.parse(JSON.stringify(followings))}
-                          postUser={post?.user}
+                          postUser={JSON.parse(JSON.stringify(post?.user))}
                         />
                       )}
                     </Flex>

@@ -4,13 +4,14 @@ import { createSavedPosts, deleteSavedPosts } from "@/lib/actions";
 import { useAuth } from "@clerk/nextjs";
 import { Button } from "@radix-ui/themes";
 import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
+import { SavedPost } from "@/app/blogs/types";
 
 const BookMarkButton = ({
   postId,
   savedPosts,
 }: {
   postId: string;
-  savedPosts: any;
+  savedPosts: SavedPost[];
 }) => {
   const { userId, sessionId } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -30,10 +31,9 @@ const BookMarkButton = ({
     setLoading(true);
     try {
       const savedPost = savedPosts.find(
-        (post: any) =>
-          post?.post?.id === postId && userId === post?.user?.externalId
+        (post) => post?.post?.id === postId && userId === post?.user?.externalId
       );
-      await deleteSavedPosts(savedPost?.id);
+      await deleteSavedPosts(String(savedPost?.id));
     } catch (error) {
       console.error("Error deleting saved post:", error);
     } finally {
@@ -42,14 +42,13 @@ const BookMarkButton = ({
   };
 
   return savedPosts?.some(
-    (post: any) =>
-      post?.post?.id === postId && userId === post?.user?.externalId
+    (post) => post?.post?.id === postId && userId === post?.user?.externalId
   ) ? (
     <>
       <Button
         variant="outline"
         onClick={unsaveHandler}
-        className="cursor-pointer"
+        style={{ cursor: "pointer" }}
         disabled={loading}
       >
         {loading ? (
@@ -66,7 +65,7 @@ const BookMarkButton = ({
     <Button
       variant="outline"
       onClick={saveHandler}
-      className="cursor-pointer"
+      style={{ cursor: "pointer" }}
       disabled={loading}
     >
       {loading ? (

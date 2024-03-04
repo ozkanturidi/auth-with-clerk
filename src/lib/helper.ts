@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const formatDate = (date: any) => {
+export const formatDate = (date: Date) => {
   const postDate = moment(date);
   const currentDate = moment();
   const diffInSeconds = currentDate.diff(postDate, "seconds");

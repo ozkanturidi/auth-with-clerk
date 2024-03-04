@@ -1,14 +1,16 @@
 "use client";
 
+import { PostUser } from "@/app/blogs/types";
 import { followUser, unfollowUser } from "@/lib/actions";
+import { Followings, FollowingsRecord } from "@/xata";
 import { Button } from "@radix-ui/themes";
 
 const FollowerButton = ({
   postUser,
   followings,
 }: {
-  postUser: any;
-  followings: any;
+  postUser: PostUser;
+  followings: FollowingsRecord[];
 }) => {
   const unFollowHandler = async () => {
     await unfollowUser(postUser);
@@ -17,14 +19,23 @@ const FollowerButton = ({
   const followHandler = async () => {
     await followUser(postUser);
   };
+  console.log(postUser);
   return followings?.some(
-    (following: any) => following?.following?.id === String(postUser?.id)
+    (following) => following?.following?.id === String(postUser?.id)
   ) ? (
-    <Button variant="solid" onClick={unFollowHandler}>
+    <Button
+      style={{ cursor: "pointer" }}
+      variant="solid"
+      onClick={unFollowHandler}
+    >
       Following
     </Button>
   ) : (
-    <Button variant="outline" onClick={followHandler}>
+    <Button
+      style={{ cursor: "pointer" }}
+      variant="outline"
+      onClick={followHandler}
+    >
       Follow
     </Button>
   );

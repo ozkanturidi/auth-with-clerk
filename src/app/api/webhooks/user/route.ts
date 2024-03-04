@@ -41,7 +41,8 @@ async function handler(request: Request) {
     | "user.created"
     | "user.updated"
     | "user.deleted"
-    | "session.created";
+    | "session.created"
+    | "session.ended";
 
   type Event = {
     data: Record<string, string | number>;
@@ -49,42 +50,53 @@ async function handler(request: Request) {
     type: EventType;
   };
 
-  if (eventType === "user.created") {
-    const { id, ...attributes } = evt.data;
+  switch (eventType) {
+    case "user.created": {
+      const { id, ...attributes } = evt.data;
 
-    await xataClient.db.users.create({
-      externalId: String(id),
-      firstname: String(attributes.first_name),
-      lastname: String(attributes.last_name),
-      imageurl: String(attributes.image_url),
-    });
-    return NextResponse.json({ success: true });
-  } else if (eventType === "user.deleted") {
-    const { id } = evt.data;
-    const users = await xataClient.db.users
-      .filter({ externalId: String(id) })
-      .getMany();
-    if (users) {
-      await xataClient.db.users.delete(String(users[0].id));
+      await xataClient.db.users.create({
+        externalId: String(id),
+        firstname: String(attributes.first_name),
+        lastname: String(attributes.last_name),
+        imageurl: String(attributes.image_url),
+      });
       return NextResponse.json({ success: true });
-    } else {
-      console.error(`User with externalId ${id} not found`);
-      return NextResponse.json({ success: false }, { status: 404 });
     }
-  } else if (eventType === "session.created") {
-    const { user_id } = evt.data;
-    const users = await xataClient.db.users
-      .filter({ externalId: String(user_id) })
-      .getMany();
-    if (users) {
-      Cookies.set("userId", users[0].id);
-      const response = NextResponse.json({ success: true });
-      response.cookies.set("userId", users[0].id);
-      return response;
+    case "user.deleted": {
+      const { id } = evt.data;
+      const users = await xataClient.db.users
+        .filter({ externalId: String(id) })
+        .getMany();
+      if (users) {
+        await xataClient.db.users.delete(String(users[0].id));
+        return NextResponse.json({ success: true });
+      } else {
+        console.error(`User with externalId ${id} not found`);
+        return NextResponse.json({ success: false }, { status: 404 });
+      }
     }
-  } else {
-    console.log(`Unhandled event type: ${eventType}`);
-    return NextResponse.json({ success: false }, { status: 400 });
+    case "session.created": {
+      const { user_id } = evt.data;
+      const users = await xataClient.db.users
+        .filter({ externalId: String(user_id) })
+        .getMany();
+      if (users) {
+        Cookies.set("userId", users[0].id);
+        const response = NextResponse.json({ success: true });
+        response.cookies.set("userId", users[0].id);
+        return response;
+      }
+    }
+    case "session.ended": {
+      return NextResponse.json({
+        success: true,
+        message: "Session ended succesfully",
+      });
+    }
+    default: {
+      console.log(`Unhandled event type: ${eventType}`);
+      return NextResponse.json({ success: false }, { status: 400 });
+    }
   }
 }
 
