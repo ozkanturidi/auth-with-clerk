@@ -5,6 +5,8 @@ import "@radix-ui/themes/styles.css";
 import Navbar from "@/components/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Container, Theme } from "@radix-ui/themes";
+import natureImage from "../../public/nature.jpg";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,9 +26,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <Theme>
             <Navbar />
-            <Container size={"4"}>
-              <main>{children}</main>
-            </Container>
+            <main>{children}</main>
           </Theme>
         </body>
       </html>

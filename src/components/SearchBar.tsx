@@ -34,7 +34,7 @@ const SearchBar = () => {
             <MagnifyingGlassIcon height="16" width="16" />
           </TextFieldSlot>
           <TextFieldInput
-            placeholder="Search the docs…"
+            placeholder="Search the blogs by author, title or content..."
             size="2"
             onChange={(e) => searchHandler(e.target.value)}
           />

@@ -2,8 +2,10 @@
 
 import { PostUser } from "@/app/blogs/types";
 import { followUser, unfollowUser } from "@/lib/actions";
-import { Followings, FollowingsRecord } from "@/xata";
+import { FollowingsRecord } from "@/xata";
+import { useAuth } from "@clerk/nextjs";
 import { Button } from "@radix-ui/themes";
+import { useState } from "react";
 
 const FollowerButton = ({
   postUser,
@@ -12,32 +14,51 @@ const FollowerButton = ({
   postUser: PostUser;
   followings: FollowingsRecord[];
 }) => {
-  const unFollowHandler = async () => {
-    await unfollowUser(postUser);
-  };
+  const { userId } = useAuth();
+  const [isFollowing, setIsFollowing] = useState(
+    followings?.some(
+      (following) => following?.following?.id === String(postUser.id)
+    )
+  );
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const followHandler = async () => {
-    await followUser(postUser);
+  const handleFollowUnfollow = async () => {
+    setIsUpdating(true); // Disable button and update text
+    try {
+      if (isFollowing) {
+        await unfollowUser(postUser);
+        setIsFollowing(false);
+      } else {
+        await followUser(postUser);
+        setIsFollowing(true);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUpdating(false); // Re-enable button after action
+    }
   };
   console.log(postUser);
-  return followings?.some(
-    (following) => following?.following?.id === String(postUser?.id)
-  ) ? (
-    <Button
-      style={{ cursor: "pointer" }}
-      variant="solid"
-      onClick={unFollowHandler}
-    >
-      Following
-    </Button>
-  ) : (
-    <Button
-      style={{ cursor: "pointer" }}
-      variant="outline"
-      onClick={followHandler}
-    >
-      Follow
-    </Button>
+  return (
+    <div>
+      {postUser?.externalId !== userId && (
+        <Button
+          style={{ cursor: "pointer" }}
+          variant={isFollowing ? "solid" : "outline"}
+          onClick={handleFollowUnfollow}
+          disabled={isUpdating}
+          size={"1"}
+        >
+          {isUpdating
+            ? isFollowing
+              ? "Unfollowing..."
+              : "Following..."
+            : isFollowing
+            ? "Following"
+            : "Follow"}
+        </Button>
+      )}
+    </div>
   );
 };
 

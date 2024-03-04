@@ -14,69 +14,61 @@ const BookMarkButton = ({
   savedPosts: SavedPost[];
 }) => {
   const { userId, sessionId } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const saveHandler = async () => {
-    setLoading(true);
+  const [isBookMarked, setIsBookMarked] = useState(
+    savedPosts?.some(
+      (post) => post?.post?.id === postId && userId === post?.user?.externalId
+    )
+  );
+
+  const handleSaveUnSave = async () => {
+    setIsUpdating(true);
     try {
-      await createSavedPosts(postId);
+      if (isBookMarked) {
+        const savedPost = savedPosts.find(
+          (post) =>
+            post?.post?.id === postId && userId === post?.user?.externalId
+        );
+        await deleteSavedPosts(String(savedPost?.id));
+        setIsBookMarked(false);
+      } else {
+        await createSavedPosts(postId);
+        setIsBookMarked(true);
+      }
     } catch (error) {
       console.error("Error saving post:", error);
     } finally {
-      setLoading(false);
+      setIsUpdating(false);
     }
   };
 
-  const unsaveHandler = async () => {
-    setLoading(true);
-    try {
-      const savedPost = savedPosts.find(
-        (post) => post?.post?.id === postId && userId === post?.user?.externalId
-      );
-      await deleteSavedPosts(String(savedPost?.id));
-    } catch (error) {
-      console.error("Error deleting saved post:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return savedPosts?.some(
-    (post) => post?.post?.id === postId && userId === post?.user?.externalId
-  ) ? (
-    <>
+  return (
+    <div>
       <Button
-        variant="outline"
-        onClick={unsaveHandler}
         style={{ cursor: "pointer" }}
-        disabled={loading}
+        variant="outline"
+        onClick={handleSaveUnSave}
+        disabled={isUpdating}
+        size={"1"}
       >
-        {loading ? (
-          "Loading..."
+        {isUpdating ? (
+          isBookMarked ? (
+            "Unsaving..."
+          ) : (
+            "Saving..."
+          )
+        ) : isBookMarked ? (
+          <>
+            <BookmarkFilledIcon width="16" height="16" /> Bookmark
+          </>
         ) : (
           <>
-            <BookmarkFilledIcon width="16" height="16" />
-            Bookmark
+            <BookmarkIcon width="16" height="16" /> Bookmark
           </>
         )}
       </Button>
-    </>
-  ) : (
-    <Button
-      variant="outline"
-      onClick={saveHandler}
-      style={{ cursor: "pointer" }}
-      disabled={loading}
-    >
-      {loading ? (
-        "Loading..."
-      ) : (
-        <>
-          <BookmarkIcon width="16" height="16" />
-          Bookmark
-        </>
-      )}
-    </Button>
+    </div>
   );
 };
 

@@ -38,8 +38,8 @@ export default async function createBlog(
   } catch (error) {
     console.error(error);
   }
-  revalidatePath("/blogs");
-  redirect("/blogs");
+  revalidatePath("/");
+  redirect("/");
 }
 
 export const createSavedPosts = async (postId: string) => {
@@ -53,7 +53,7 @@ export const createSavedPosts = async (postId: string) => {
       user: user && String(user[0]?.id),
       post: postId,
     });
-    revalidatePath("/blogs");
+    revalidatePath("/");
   } catch (error) {
     console.error(error);
   }
@@ -63,7 +63,7 @@ export const deleteSavedPosts = async (postId: string) => {
   const xataClient = getXataClient();
   try {
     await xataClient.db.users_saved_posts.delete(postId);
-    revalidatePath("/blogs");
+    revalidatePath("/");
   } catch (error) {
     console.error(error);
   }
@@ -81,7 +81,7 @@ export const followUser = async (followingUser: any) => {
       user: user && String(user[0]?.id),
       following: String(followingUser?.id),
     });
-    revalidatePath("/blogs");
+    revalidatePath("/");
   } catch (error) {
     console.error(error);
   }
@@ -98,7 +98,7 @@ export const unfollowUser = async (followingUser: any) => {
       })
       .getMany();
     await xataClient.db.followings.delete(followings[0]?.id);
-    revalidatePath("/blogs");
+    revalidatePath("/");
   } catch (error) {
     console.error(error);
   }

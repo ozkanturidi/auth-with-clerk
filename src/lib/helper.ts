@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const formatDate = (date: Date) => {
+export const formatDate = (date: string) => {
   const postDate = moment(date);
   const currentDate = moment();
   const diffInSeconds = currentDate.diff(postDate, "seconds");
@@ -13,10 +13,10 @@ export const formatDate = (date: Date) => {
     return `${diffInMinutes} minutes ago`;
   } else if (diffInHours < 24) {
     return `${diffInHours} hours ago`;
-  } else if (diffInDays < 30) {
+  } else if (diffInDays < 1) {
     return `${diffInDays} days ago`;
   } else {
-    return postDate.format("MMM DD, YYYY");
+    return postDate.format("MMM D, YYYY");
   }
 };
 

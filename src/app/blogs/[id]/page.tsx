@@ -2,12 +2,15 @@ import { Avatar, Box, Flex, Text } from "@radix-ui/themes";
 import { formatDate, formatImageUrl, formatReadMin } from "@/lib/helper";
 
 import Image from "next/image";
-import { getSinglePost } from "@/lib/data";
+import { getFollowings, getSinglePost } from "@/lib/data";
 import LikeButton from "@/components/LikeButton";
+import FollowerButton from "@/components/FollowerButton";
 const BlogDetails = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
 
   const post = await getSinglePost(id);
+  const followings = await getFollowings();
+
   return (
     <>
       <Box pt={"4"}>
@@ -23,13 +26,18 @@ const BlogDetails = async ({ params }: { params: { id: string } }) => {
               fallback="T"
             />
             <Flex direction={"column"}>
-              <Text as="div" size="2" weight="medium">
-                {`${post?.user?.firstname} ${post?.user?.lastname}`}
-              </Text>
-
+              <Flex gap={"2"} align={"center"}>
+                <Text as="div" size="2" weight="medium">
+                  {`${post?.user?.firstname} ${post?.user?.lastname}`}
+                </Text>
+                <FollowerButton
+                  followings={JSON.parse(JSON.stringify(followings))}
+                  postUser={JSON.parse(JSON.stringify(post?.user))}
+                />
+              </Flex>
               <Flex direction={"row"} gap={"4"}>
                 <Text>{formatReadMin(post?.content ?? "")}</Text>
-                <Text>{formatDate(post?.xata?.createdAt)}</Text>
+                <Text>{formatDate(String(post?.xata?.createdAt))}</Text>
               </Flex>
             </Flex>
           </Flex>
@@ -39,15 +47,16 @@ const BlogDetails = async ({ params }: { params: { id: string } }) => {
               <Text>{post?.likesCount || 0}</Text>
             </Flex>
           </Box>
-          <Text>{post?.content}</Text>
+
           {post?.image && post?.image[0] && (
             <Image
               src={post?.image[0]?.url ?? ""}
               alt="PostImage"
-              width={400}
-              height={400}
+              width={800}
+              height={800}
             />
           )}
+          <Text>{post?.content}</Text>
         </Flex>
       </Box>
     </>

@@ -56,3 +56,15 @@ export const getFollowings = async () => {
     .getMany();
   return followings;
 };
+
+export const getTagPosts = async (tag: string) => {
+  const posts = await xataClient.db.posts
+    .select(["*", "user.*"])
+    .filter({
+      tag: tag,
+    })
+    .sort("xata.createdAt", "desc")
+    .getMany();
+
+  return posts;
+};

@@ -45,7 +45,7 @@ const CreateBlog = () => {
               <Text as="label" size="2">
                 <Flex gap="2">
                   <Switch defaultChecked value={"Turkish"} name="language" />{" "}
-                  Türkçe
+                  Turkish
                 </Flex>
               </Text>
             </Flex>

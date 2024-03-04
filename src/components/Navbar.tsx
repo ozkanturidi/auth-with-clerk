@@ -21,7 +21,7 @@ const Navbar = () => {
   }, [prevScrollPos, visible]);
 
   const Links = [
-    { name: "Blogs", href: "/blogs", visible: true },
+    { name: "Home", href: "/", visible: true },
     {
       name: "Create Blog",
       href: "/blogs/create",
