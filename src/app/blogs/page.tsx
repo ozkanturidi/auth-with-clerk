@@ -22,7 +22,7 @@ const Blogs = async ({ data }: { data: any }) => {
             align={"center"}
             gap={"5"}
           >
-            {data?.map((post) => (
+            {data?.map((post: any) => (
               <CardComp key={post?.id} post={post} />
             ))}
           </Flex>
