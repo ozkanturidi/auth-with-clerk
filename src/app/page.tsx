@@ -1,6 +1,6 @@
 // import Blogs from "./blogs/page";
 import { getPosts } from "@/lib/data";
-import { Text } from "@radix-ui/themes";
+import { CircularProgress } from "@mui/material";
 import Image from "next/image";
 import React, { Suspense } from "react";
 import natureImage from "../../public/nature.jpg";
@@ -26,23 +26,11 @@ const Home = async ({
           sizes="100vw"
           style={{ objectFit: "cover" }}
         />
-        <Text
-          style={{
-            position: "relative",
-            top: "50%",
-            left: "40%",
-            userSelect: "none",
-            zIndex: 50,
-          }}
-          size={"8"}
-          color="red"
-        >
-          Reach your dreams
-        </Text>
       </div>
       <Suspense
         fallback={
-          <div className="flex justify-center items-center mt-6">
+          <div className="flex justify-center gap-2 items-center mt-6">
+            <CircularProgress />
             Loading Blogs...
           </div>
         }
