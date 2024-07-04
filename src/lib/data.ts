@@ -1,6 +1,5 @@
 import { getXataClient } from "@/xata";
 import { auth } from "@clerk/nextjs";
-import { contains } from "@xata.io/client";
 
 const xataClient = getXataClient();
 
@@ -62,6 +61,18 @@ export const getTagPosts = async (tag: string) => {
     .select(["*", "user.*"])
     .filter({
       tag: tag,
+    })
+    .sort("xata.createdAt", "desc")
+    .getMany();
+
+  return posts;
+};
+
+export const getPostsOfUser = async (userId: string) => {
+  const posts = await xataClient.db.posts
+    .select(["*", "user.*"])
+    .filter({
+      "user.externalId": userId,
     })
     .sort("xata.createdAt", "desc")
     .getMany();

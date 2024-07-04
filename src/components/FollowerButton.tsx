@@ -23,7 +23,7 @@ const FollowerButton = ({
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleFollowUnfollow = async () => {
-    setIsUpdating(true); // Disable button and update text
+    setIsUpdating(true);
     try {
       if (isFollowing) {
         await unfollowUser(postUser);
@@ -35,7 +35,7 @@ const FollowerButton = ({
     } catch (error) {
       console.error(error);
     } finally {
-      setIsUpdating(false); // Re-enable button after action
+      setIsUpdating(false);
     }
   };
   console.log(postUser);

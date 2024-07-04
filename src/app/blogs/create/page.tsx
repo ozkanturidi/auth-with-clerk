@@ -1,19 +1,16 @@
 "use client";
 import {
-  Box,
   Flex,
+  Select,
+  Switch,
+  Text,
   TextArea,
   TextFieldInput,
-  Text,
-  Section,
-  Button,
-  Switch,
-  Select,
 } from "@radix-ui/themes";
 
-import { useFormState, useFormStatus } from "react-dom";
-import createBlog from "@/lib/actions";
 import SubmitButton from "@/components/SubmitButton";
+import createBlog from "@/lib/actions";
+import { useFormState } from "react-dom";
 
 const CreateBlog = () => {
   const [state, createBlogAction] = useFormState(createBlog, null);

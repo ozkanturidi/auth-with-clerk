@@ -1,9 +1,11 @@
-import Blogs from "./blogs/page";
+// import Blogs from "./blogs/page";
 import { getPosts } from "@/lib/data";
-import natureImage from "../../public/nature.jpg";
-import { Box } from "@radix-ui/themes";
-import Image from "next/image";
 import { Text } from "@radix-ui/themes";
+import Image from "next/image";
+import React, { Suspense } from "react";
+import natureImage from "../../public/nature.jpg";
+
+const Blogs = React.lazy(() => import("./blogs/page"));
 const Home = async ({
   searchParams,
 }: {
@@ -38,7 +40,15 @@ const Home = async ({
           Reach your dreams
         </Text>
       </div>
-      <Blogs data={data} />;
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center mt-6">
+            Loading Blogs...
+          </div>
+        }
+      >
+        <Blogs data={data} />
+      </Suspense>
     </>
   );
 };
