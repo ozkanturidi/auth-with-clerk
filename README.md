@@ -49,10 +49,7 @@ Optimize the performance of a Next.js application by implementing lazy loading f
 
 ## Screenshots
 
-- **Before Adding Blog Detail Pages**: Bundle size - 200 KB
-- **After Adding Dialog and Drawer Components**: Bundle size - 255 KB
-- **After Dynamic Import**: Bundle size - 207 KB
-
-![Before Adding Blog Detail Pages](public/inital.jpg)
-![After Adding Dialog and Drawer Components](public/aftercomponents.jpg)
-![After Dynamic Import](public/afterdynamic.jpg)
+- ** Import Dialog and Drawer Components without dynamic import **: Bundle size - 234 KB ->` blogs/id page`
+  ![After Adding Dialog and Drawer Components](public/beforedynamic.jpg)
+- **After Dynamic Import**: Bundle size - 176 KB -> `blogs/id page`
+  ![After Dynamic Import](public/afterdynamic.jpg)
