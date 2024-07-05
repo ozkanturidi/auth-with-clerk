@@ -7,6 +7,12 @@ const BlogsDrawer = ({ open, onClose, postsOfUser }: any) => {
         width: "350px",
         listStyleType: "decimal",
         listStylePosition: "inside",
+        "& .MuiDrawer-modal": {
+          width: "350px",
+        },
+        "& .MuiPaper-root": {
+          width: "300px",
+        },
       }}
       anchor="right"
       open={open}

@@ -20,6 +20,7 @@ const EditDialog = ({ open, onClose }: any) => {
       showConfirmButton: false,
       timer: 1500,
     });
+    onClose();
   };
   return (
     <Dialog
