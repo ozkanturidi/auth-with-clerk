@@ -1,16 +1,12 @@
 import EditButton from "@/components/EditButton";
-// import FollowerButton from "@/components/FollowerButton";
-// import LatestBlogs from "@/components/LatestBlogs";
-// import LikeButton from "@/components/LikeButton";
+import FollowerButton from "@/components/FollowerButton";
+import LatestBlogs from "@/components/LatestBlogs";
 import { getFollowings, getPostsOfUser, getSinglePost } from "@/lib/data";
 import { formatDate, formatReadMin } from "@/lib/helper";
 import { auth } from "@clerk/nextjs";
 import { Avatar, Box, Flex, Text } from "@radix-ui/themes";
-import dynamic from "next/dynamic";
 import Image from "next/image";
-const FollowerButton = dynamic(() => import("@/components/FollowerButton"));
-const LatestBlogs = dynamic(() => import("@/components/LatestBlogs"));
-const LikeButton = dynamic(() => import("@/components/LikeButton"));
+
 const BlogDetails = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
 
@@ -57,8 +53,6 @@ const BlogDetails = async ({ params }: { params: { id: string } }) => {
           </Flex>
           <Box className=" border-b-2 border-t-2 border-gray-100 w-full py-2 ">
             <Flex gap={"2"} align={"center"}>
-              <LikeButton postId={String(post?.id)} />
-              <Text>{post?.likesCount || 0}</Text>
               {post?.user?.externalId === userId && <EditButton />}
             </Flex>
           </Box>

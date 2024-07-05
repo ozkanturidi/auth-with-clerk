@@ -1,7 +1,6 @@
 "use client";
 
 import { PostUser } from "@/app/blogs/types";
-import { Button } from "@mui/material";
 import { useState } from "react";
 // import BlogsDrawer from "./BlogsDrawer";
 import dynamic from "next/dynamic";
@@ -19,17 +18,19 @@ const LatestBlogs = ({
 }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
+  const handleDrawerOpen = () => {
+    setOpenDrawer(true);
+  };
+
   return (
     <>
-      <Button
+      <button
         type="button"
-        onClick={(e) => {
-          setOpenDrawer(true);
-        }}
-        variant="contained"
+        className="border bg-blue-500 rounded-md px-4 py-2 text-white"
+        onClick={handleDrawerOpen}
       >
         Latest Blogs of {postUser?.firstname}
-      </Button>
+      </button>
       <BlogsDrawer
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}

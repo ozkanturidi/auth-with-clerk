@@ -38,7 +38,6 @@ const FollowerButton = ({
       setIsUpdating(false);
     }
   };
-  console.log(postUser);
   return (
     <div>
       {postUser?.externalId !== userId && (
